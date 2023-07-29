@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Optional
 from packets import get_packets
 
 load_dotenv()
@@ -32,6 +32,20 @@ async def index():
     return content
 
 
+class IpDetails(BaseModel):
+    ip: str
+    country_code: str
+    country_name: str
+    region_name: str
+    city_name: str
+    latitude: float
+    longitude: float
+    zip_code: str
+    time_zone: str
+    asn: str
+    as_: str 
+    is_proxy: Optional[bool] = None  # Optional field with default value of None
+
 # Define a Pydantic model for the packet data
 class PacketResult(BaseModel):
     ip: List[str]
@@ -42,7 +56,8 @@ class PacketResult(BaseModel):
     ssdp_requests: List[str]
     slsk_username: List[str]
     slsk_search_text: List[str]
-    iplocation: List[str]
+    # ip_details: List[IpDetails]
+    ip_details: Optional[IpDetails] = None  # Make ip_details optional with default value of None
 
 
 @app.post("/packets")
