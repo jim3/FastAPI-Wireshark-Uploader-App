@@ -10,7 +10,7 @@ api_key = os.getenv("API_KEY")
 def ip_address(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        ip_set = set()
+        ip_list = []
         ip_list = ["ip.src", "ip.host"]
         for e in data:
             try:
@@ -19,9 +19,10 @@ def ip_address(filepath):
                 ip = e["_source"]["layers"]["ip"]
                 for e in ip_list:
                     if e in ip:
-                        ip_set.add(ip[e])
+                        ip_list.append(ip[e])
             except:
                 pass
+        ip_set = set(ip_list)
         ip_list = list(ip_set)
         return ip_list
 
@@ -29,9 +30,8 @@ def ip_address(filepath):
 def mac_address(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        mac_set = set()
+        mac_list = []
         mac_list = ["eth.src", "eth.dst"]
-
         for e in data:
             try:
                 if "eth" not in e["_source"]["layers"]:
@@ -39,9 +39,10 @@ def mac_address(filepath):
                 mac = e["_source"]["layers"]["eth"]
                 for e in mac_list:
                     if e in mac:
-                        mac_set.add(mac[e])
+                        mac_list.append(mac[e])
             except:
                 pass
+        mac_set = set(mac_list)
         mac_list = list(mac_set)
         return mac_list
 
@@ -49,7 +50,7 @@ def mac_address(filepath):
 def udp_ports(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        udp_set = set()
+        udp_list = []
         udp_list = ["udp.srcport", "udp.dstport"]
         for e in data:
             try:
@@ -58,9 +59,10 @@ def udp_ports(filepath):
                 udp = e["_source"]["layers"]["udp"]
                 for e in udp_list:
                     if e in udp:
-                        udp_set.add(udp[e])
+                        udp_list.append(udp[e])
             except:
                 pass
+        udp_set = set(udp_list)
         udp_list = list(udp_set)
         return udp_list
 
@@ -68,7 +70,7 @@ def udp_ports(filepath):
 def tcp_ports(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        tcp_set = set()
+        tcp_list = []
         tcp_list = ["tcp.srcport", "tcp.dstport"]
         try:
             for e in data:
@@ -77,9 +79,10 @@ def tcp_ports(filepath):
                 tcp = e["_source"]["layers"]["tcp"]
                 for e in tcp_list:
                     if e in tcp:
-                        tcp_set.add(tcp[e])
+                        tcp_list.append(tcp[e])
         except:
             pass
+        tcp_set = set(tcp_list)
         tcp_list = list(tcp_set)
         return tcp_list
 
@@ -87,7 +90,7 @@ def tcp_ports(filepath):
 def http(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        http_set = set()
+        http_list = []
         http_list = [
             "http.host",
             "http.request.full_uri",
@@ -101,9 +104,10 @@ def http(filepath):
                 http = e["_source"]["layers"]["http"]
                 for h in http_list:
                     if h in http:
-                        http_set.add(http[h])
+                        http_list.append(http[h])
         except:
             pass
+        http_set = set(http_list)
         http_list = list(http_set)
         return http_list
 
@@ -111,7 +115,7 @@ def http(filepath):
 def ssdp(filepath):
     with open(filepath) as file:
         data = json.load(file)
-        ssdp_set = set()
+        ssdp_list = []
         ssdp_list = ["http.location", "http.server", "http.response.code"]
         try:
             for e in data:
@@ -120,9 +124,10 @@ def ssdp(filepath):
                 ssdp = e["_source"]["layers"]["ssdp"]
                 for s in ssdp_list:
                     if s in ssdp:
-                        ssdp_set.add(ssdp[s])
+                        ssdp_list.append(ssdp[s])
         except:
             pass
+        ssdp_set = set(ssdp_list)
         ssdp_list = list(ssdp_set)
         return ssdp_list
 
@@ -132,19 +137,13 @@ def slsk(filepath):
         data = json.load(file)
         slsk_username = []
         slsk_search_text = []
-        try:
-            for e in data:
-                if "slsk" not in e["_source"]["layers"]:
-                    continue
+        for e in data:
+            if "slsk" in e["_source"]["layers"]:
                 slsk = e["_source"]["layers"]["slsk"]
-                if "slsk.username" not in slsk:
-                    continue
-                slsk_username.append(slsk["slsk.username"])
-                if "slsk.search.text" not in slsk:
-                    continue
-                slsk_search_text.append(slsk["slsk.search.text"])
-        except:
-            pass
+                if "slsk.username" in slsk:
+                    slsk_username.append(slsk["slsk.username"])
+                if "slsk.search.text" in slsk:
+                    slsk_search_text.append(slsk["slsk.search.text"])
         return slsk_username, slsk_search_text
 
 
@@ -158,7 +157,6 @@ def ip_details(filepath):
         if r.status_code != 200:
             return None
         return r.json()
-
     with open(filepath) as file:
         data = json.load(file)
         ip_details_set = set()
