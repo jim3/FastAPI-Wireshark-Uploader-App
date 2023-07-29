@@ -155,7 +155,10 @@ def ip_details(filepath):
         format = "json"
         url = f"{baseURL}?key={apiKey}&ip={ip}&format={format}"
         r = requests.get(url)
+        if r.status_code != 200:
+            return None
         return r.json()
+
     with open(filepath) as file:
         data = json.load(file)
         ip_details_set = set()
@@ -173,7 +176,9 @@ def ip_details(filepath):
         ip_list = list(ip_details_set)
         ip_details = []
         for ip in ip_list:
-            ip_details.append(get_ip_details(ip))
+            details = get_ip_details(ip)
+            if details is not None:
+                ip_details.append(details)
         return ip_details
 
 
