@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "fast-packet"
+version = "0.1.0"
+description = ""
+authors = ["jim3 <j3.casey@protonmail.com>"]
+readme = "README.md"
+packages = [{include = "fast_packet"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.100.1"}
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+pymongo = "^4.4.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
