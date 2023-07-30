@@ -3,6 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 api_key = os.getenv("API_KEY")
 
@@ -11,20 +12,38 @@ def ip_address(filepath):
     with open(filepath) as file:
         data = json.load(file)
         ip_list = []
-        ip_list = ["ip.src", "ip.host"]
-        for e in data:
+        ip_listing = ["ip.src", "ip.host"]
+        for elem in data:
             try:
-                if "ip" not in e["_source"]["layers"]:
+                if "ip" not in elem["_source"]["layers"]:
                     continue
-                ip = e["_source"]["layers"]["ip"]
-                for e in ip_list:
-                    if e in ip:
-                        ip_list.append(ip[e])
+                ip = elem["_source"]["layers"]["ip"]
+                for i in ip_listing:
+                    if i in ip:
+                        ip_list.append(ip[i])
             except:
                 pass
         ip_set = set(ip_list)
         ip_list = list(ip_set)
         return ip_list
+
+
+def dns(filepath):
+    with open(filepath) as file:
+        data = json.load(file)
+        dns_list = []
+        for elem in data:
+            try:
+                if "dns" not in elem["_source"]["layers"]:
+                    continue
+                dns_queries = elem["_source"]["layers"]["dns"]["Queries"]
+                for elem in dns_queries.values():
+                    dns_list.append(elem['dns.qry.name'])
+            except:
+                pass
+        dns_set = set(dns_list)
+        dns_list = list(dns_set)
+        return dns_list
 
 
 def mac_address(filepath):
@@ -157,6 +176,7 @@ def ip_details(filepath):
         if r.status_code != 200:
             return None
         return r.json()
+
     with open(filepath) as file:
         data = json.load(file)
         ip_details_set = set()
@@ -186,6 +206,7 @@ def get_packets(filepath):
     udp = udp_ports(filepath)
     tcp = tcp_ports(filepath)
     http_requests = http(filepath)
+    dns_records = dns(filepath)
     ssdp_requests = ssdp(filepath)
     slsk_username, slsk_search_text = slsk(filepath)
     iplocation = ip_details(filepath)
@@ -196,6 +217,7 @@ def get_packets(filepath):
         "udp": udp,
         "tcp": tcp,
         "http_requests": http_requests,
+        "dns_records": dns_records,
         "ssdp_requests": ssdp_requests,
         "slsk_username": slsk_username,
         "slsk_search_text": slsk_search_text,
