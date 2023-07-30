@@ -1,6 +1,9 @@
 # dotenv environment variables file
 .env
 
+# json test file
+tls.json
+
 # Logs
 logs
 *.log
