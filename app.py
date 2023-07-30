@@ -43,10 +43,10 @@ class IpDetails(BaseModel):
     zip_code: str
     time_zone: str
     asn: str
-    as_: str 
-    is_proxy: Optional[bool] = None  # Optional field with default value of None
+    as_: str
+    is_proxy: Optional[bool] = None
 
-# Define a Pydantic model for the packet data
+
 class PacketResult(BaseModel):
     ip: List[str]
     mac: List[str]
@@ -56,8 +56,7 @@ class PacketResult(BaseModel):
     ssdp_requests: List[str]
     slsk_username: List[str]
     slsk_search_text: List[str]
-    # ip_details: List[IpDetails]
-    ip_details: Optional[IpDetails] = None  # Make ip_details optional with default value of None
+    ip_details: Optional[IpDetails] = None
 
 
 @app.post("/packets")
