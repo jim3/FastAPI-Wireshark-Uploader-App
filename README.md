@@ -1,4 +1,4 @@
-### FastAPI Wireshark Uploader App
+### Wireshark Uploader App
 
 Uses the FastAPI framework to create a REST API that allows users to upload their exported Wireshark files (JSON format) to a MongoDB Atlas database. After each upload, the `packets` endpoint returns an extracted version of the results to the client as well. The packets.py file is to be customized to whatever protocol you want to analyze, the choices seem to be endless!
 
